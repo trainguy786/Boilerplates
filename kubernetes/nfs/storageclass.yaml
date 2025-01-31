@@ -4,8 +4,8 @@ metadata:
   name: nfs-csi
 provisioner: nfs.csi.k8s.io
 parameters:
-  server: 10.0.0.10
-  share: /mnt/NVME-for-now/k3s
+  server: <ip>
+  share: <path>
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 mountOptions:

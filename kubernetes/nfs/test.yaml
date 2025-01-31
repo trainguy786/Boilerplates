@@ -8,8 +8,8 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: 10.0.0.10
-    path: /mnt/NVME-for-now/k3s
+    server: <ip>
+    path: <path>
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

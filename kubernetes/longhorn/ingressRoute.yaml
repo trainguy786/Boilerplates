@@ -8,7 +8,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`longhorn.kube.soulneko.xyz`)
+    - match: Host(`longhorn.kube.domain.local`)
       kind: Rule
       services:
         - name: longhorn-frontend

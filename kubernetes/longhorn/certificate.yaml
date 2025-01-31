@@ -7,7 +7,7 @@ metadata:
 spec:
   secretName: longhorn-web-ui-tls
   dnsNames:
-    - longhorn.kube.soulneko.xyz
+    - longhorn.kube.domain.local
   issuerRef:
     name: cloudflare-clusterissuer
     kind: ClusterIssuer

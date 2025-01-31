@@ -34,7 +34,7 @@ spec:
           protocol: TCP
         env:
         - name: TZ
-          value: Europe/London
+          value: UTC
         volumeMounts:
         - mountPath: "/books"
           readOnly: false

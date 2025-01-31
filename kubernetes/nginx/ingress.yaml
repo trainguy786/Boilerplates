@@ -10,12 +10,12 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`www.nginx.kube.soulneko.xyz`)
+    - match: Host(`www.nginx.kube.domain.local`)
       kind: Rule
       services:
         - name: nginx
           port: 80
-    - match: Host(`nginx.kube.soulneko.xyz`)
+    - match: Host(`nginx.kube.domain.local`)
       kind: Rule
       services:
         - name: nginx
@@ -23,4 +23,4 @@ spec:
       middlewares:
         - name: default-headers
   tls:
-    secretName: kube-soulneko-xyz-tls
+    secretName: kube-domain-local-tls

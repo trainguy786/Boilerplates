@@ -7,7 +7,7 @@ metadata:
 data:
   # Environment variables for Pi-hole
   TZ: "UTC"
-  WEBPASSWORD: "space2018" # Replace with a strong password
+  WEBPASSWORD: "<password" # Replace with a strong password
 ---
 apiVersion: v1
 kind: Service
@@ -130,6 +130,6 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - "pihole.kube.soulneko.xyz" # Replace with your domain
-      secretName: kube-soulneko-xyz-tls # Certificate managed by Traefik
+        - "pihole.kube.domain.local" # Replace with your domain
+      secretName: kube-domain-local-tls # Certificate managed by Traefik
 
