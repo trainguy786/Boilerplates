@@ -22,8 +22,8 @@ spec:
       labels:
         io.kompose.service: glance
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: kube-prod-worker-1
+      nodeSelector: #only do this if you need this to run on a specific node other comment out these two lines 
+        kubernetes.io/hostname: kube-prod-worker-1 # comnent this out if not needed
       containers:
         - image: glanceapp/glance
           name: glance
@@ -45,7 +45,7 @@ spec:
       volumes:
         - name: glance-claim0
           hostPath:
-            path: /root/data/glance/glance.yml # Change "yourusername" accordingly
+            path: /root/data/glance/glance.yml # Change "yourusername" accordingly. This is where the glance.yml file is located 
             type: File
         - configMap:
             items:

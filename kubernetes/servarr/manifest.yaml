@@ -138,5 +138,5 @@ metadata:
   name: vpn-credentials
 type: Opaque
 stringData:
-  username: LCr6HDzJATaV6TCdjxPHVEzT
-  password:  7xS22uVDEBLvKNH4Dvx86Mma
+  username: <username>
+  password:  <password>

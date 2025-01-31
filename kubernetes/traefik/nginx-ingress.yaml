@@ -9,7 +9,7 @@ spec:
   entrypoints:
   - websecure
   routes:
-  - match: Host(`nginx.kube.local.soulneko.xyz`)
+  - match: Host(`nginx.kube.domain.local`)
     kind: Rule
     services:
     - name: nginx

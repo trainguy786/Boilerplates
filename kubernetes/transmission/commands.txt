@@ -1,8 +1,0 @@
-helm install my-release \
-  --set env.LOCAL_NETWORK=10.0.10.0/24 \
-  --set env.OPENVPN_PROVIDER=surfshark \
-  --set env.OPENVPN_USERNAME=myuser \
-  --set env.TRANSMISSION_SPEED_LIMIT_UP_ENABLED=true \
-  --set env.TRANSMISSION_SPEED_LIMIT_UP=2048 \
-  --set secretEnv.OPENVPN_PASSWORD=mysecretpassword \
-  utkuozdemir/transmission-openvpn
