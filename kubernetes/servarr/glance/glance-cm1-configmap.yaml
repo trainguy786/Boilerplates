@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  timezone: |
+    Europe/London
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: glance
+  name: glance-cm1

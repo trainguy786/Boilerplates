@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: organizr-service
+  namespace: servarr
+  labels:
+    app: organizr
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80  # Port of the Guacamole web interface
+    protocol: TCP
+  selector:
+    app: organizr

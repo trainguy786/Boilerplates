@@ -1,0 +1,40 @@
+
+
+database:
+  # -- Type of database backend
+  type: postgres
+
+  # -- Read username from secret
+  usernameFromSecret: true
+
+  # -- Username for database
+  username: zaid
+
+  # # -- Key used within secret for username
+  # usernameKey: username
+
+  # -- Password for database
+  password: tSue$4voi
+
+  # # -- Key used within secret for password
+  # passwordKey: password
+
+  # # -- Existing secret to use for credentials
+  # existingSecret:
+
+  # -- Host for database connection
+  host: 10.0.10.70
+
+  # -- Port for database connection
+  port: 5432
+
+  # -- Name of the used database
+  name: semaphore
+
+  # # -- Options for database connection
+  # options: {}
+
+  # # -- Path for the boltdb
+  # path: /var/lib/semaphore/database.boltdb
+postgresql:
+  enabled: false

@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr-service
+  namespace: arr-stack
+  labels:
+    app: sonarr
+spec:
+  type: LoadBalancer
+  selector:
+    app: sonarr
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8989      # External port
+      targetPort: 8989  # Internal port of Sonarr container
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: radarr-service
+  namespace: arr-stack
+  labels:
+    app: radarr
+spec:
+  type: LoadBalancer
+  selector:
+    app: radarr
+  ports:
+    - name: http
+      protocol: TCP
+      port: 7878      # External port
+      targetPort: 7878  # Internal port of Radarr container
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bazarr-service
+  namespace: arr-stack
+  labels:
+    app: bazarr
+spec:
+  type: LoadBalancer
+  selector:
+    app: bazarr
+  ports:
+    - name: http
+      protocol: TCP
+      port: 6767      # External port
+      targetPort: 6767  # Internal port of Bazarr container
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fanresolvarr-service
+  namespace: arr-stack
+  labels:
+    app: fanresolvarr
+spec:
+  type: LoadBalancer
+  selector:
+    app: fanresolvarr
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8191      # External port
+      targetPort: 8191  # Replace with Fanresolvarr's internal port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyseerr-service
+  namespace: arr-stack
+  labels:
+    app: jellyseerr
+spec:
+  type: LoadBalancer
+  selector:
+    app: jellyseerr
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5055     # External port
+      targetPort: 5055  # Internal port of Jellyseerr container

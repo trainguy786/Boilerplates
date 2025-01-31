@@ -1,0 +1,341 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: arr-stack
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+  namespace: arr-stack
+  labels:
+    app: sonarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarr
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      containers:
+        - name: sonarr
+          image: linuxserver/sonarr:latest
+          ports:
+            - containerPort: 8989
+          env:
+            - name: PUID
+              value: "3000"  # Replace with your user ID
+            - name: PGID
+              value: "3002"  # Replace with your group ID
+            - name: TZ
+              value: "UTC"  # Replace with your timezone
+          securityContext:
+            runAsUser: 3000
+            runAsGroup: 3002
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: media
+              mountPath: /data
+      volumes:
+        - name: media
+          nfs:
+            server: 10.0.0.10
+            path: /mnt/NVME-for-now/Share/data
+        - name: config
+          persistentVolumeClaim:
+            claimName: sonarr-config-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarr-config-pvc
+  namespace: arr-stack
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr
+  namespace: arr-stack
+  labels:
+    app: sonarr
+spec:
+  type: ClusterIP
+  selector:
+    app: sonarr
+  ports:
+    - port: 8989
+      targetPort: 8989
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr
+  namespace: arr-stack
+  labels:
+    app: radarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr
+  template:
+    metadata:
+      labels:
+        app: radarr
+    spec:
+      containers:
+        - name: radarr
+          image: linuxserver/radarr:latest
+          ports:
+            - containerPort: 7878
+          env:
+            - name: PUID
+              value: "3000"
+            - name: PGID
+              value: "3002"
+            - name: TZ
+              value: "UTC"
+          securityContext:
+            runAsUser: 3000
+            runAsGroup: 3002
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: media
+              mountPath: /data
+      volumes:
+        - name: media
+          nfs:
+            server: 10.0.0.10
+            path: /mnt/NVME-for-now/Share/data
+        - name: config
+          persistentVolumeClaim:
+            claimName: radarr-config-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-config-pvc
+  namespace: arr-stack
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: radarr
+  namespace: arr-stack
+  labels:
+    app: radarr
+spec:
+  type: ClusterIP
+  selector:
+    app: radarr
+  ports:
+    - port: 7878
+      targetPort: 7878
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bazarr
+  namespace: arr-stack
+  labels:
+    app: bazarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bazarr
+  template:
+    metadata:
+      labels:
+        app: bazarr
+    spec:
+      containers:
+        - name: bazarr
+          image: linuxserver/bazarr:latest
+          ports:
+            - containerPort: 6767
+          env:
+            - name: PUID
+              value: "3000"
+            - name: PGID
+              value: "3002"
+            - name: TZ
+              value: "UTC"
+          securityContext:
+            runAsUser: 3000
+            runAsGroup: 3002
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: bazarr-config-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bazarr-config-pvc
+  namespace: arr-stack
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bazarr
+  namespace: arr-stack
+  labels:
+    app: bazarr
+spec:
+  type: ClusterIP
+  selector:
+    app: bazarr
+  ports:
+    - port: 6767
+      targetPort: 6767
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fanresolvarr
+  namespace: arr-stack
+  labels:
+    app: fanresolvarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fanresolvarr
+  template:
+    metadata:
+      labels:
+        app: fanresolvarr
+    spec:
+      containers:
+        - name: fanresolvarr
+          image: ghcr.io/flaresolverr/flaresolverr:latest  # Replace with the actual Fanresolvarr image
+          ports:
+            - containerPort: 8191  # Replace with Fanresolvarr's port
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "UTC"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: fanresolvarr-config-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fanresolvarr-config-pvc
+  namespace: arr-stack
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fanresolvarr
+  namespace: arr-stack
+  labels:
+    app: fanresolvarr
+spec:
+  type: ClusterIP
+  selector:
+    app: fanresolvarr
+  ports:
+    - port: 8081  # Replace with Fanresolvarr's port
+      targetPort: 8081
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyseerr
+  namespace: arr-stack
+  labels:
+    app: jellyseerr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyseerr
+  template:
+    metadata:
+      labels:
+        app: jellyseerr
+    spec:
+      containers:
+        - name: jellyseerr
+          image: fallenbagel/jellyseerr:latest
+          ports:
+            - containerPort: 5055
+          env:
+            - name: TZ
+              value: "UTC"
+          volumeMounts:
+            - name: config
+              mountPath: /app/config
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyseerr-config-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyseerr-config-pvc
+  namespace: arr-stack
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyseerr
+  namespace: arr-stack
+  labels:
+    app: jellyseerr
+spec:
+  type: ClusterIP
+  selector:
+    app: jellyseerr
+  ports:
+    - port: 5055
+      targetPort: 5055

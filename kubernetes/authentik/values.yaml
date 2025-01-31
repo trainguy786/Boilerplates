@@ -1,0 +1,23 @@
+authentik:
+  secret_key: "gK1lD+U9JP+ObwS0h/FPOAu0hbLFJAsLEBhW2niaH90c4+2NFSZW1Xzrai1H9I0f1FjajPDwOmohSwHM"
+  # This sends anonymous usage-data, stack traces on errors and
+  # performance data to authentik.error-reporting.a7k.io, and is fully opt-in
+  error_reporting:
+    enabled: true
+  postgresql:
+    password: "QhMmpYtOBrgbZTsVEm4CKBfwkvPhPargDwVPWLkfXEtDLPfGs8"
+
+server:
+  ingress:
+    ingressClassName: nginx
+    enabled: true
+    hosts:
+      - authentik.soulneko.xyz
+
+postgresql:
+  enabled: true
+  auth:
+    password: "QhMmpYtOBrgbZTsVEm4CKBfwkvPhPargDwVPWLkfXEtDLPfGs8"
+
+redis:
+  enabled: true

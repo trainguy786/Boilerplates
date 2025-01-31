@@ -1,0 +1,33 @@
+organizr:
+  imagePullSecrets: []
+  fullnameOverride: organizr
+  
+  env:
+    TZ: UTC
+  
+  # ingress:
+  #   enabled: true
+  #   annotations:
+  #     kubernetes.io/ingress.class: traefik
+  #     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  #     traefik.ingress.kubernetes.io/router.priority: "10"
+  #     cert-manager.io/cluster-issuer: letsencrypt-prod
+  #   hosts:
+  #     - host: organizr.domain.tld
+  #       paths:
+  #         - /
+  #   tls:
+  #     - secretName: organizr-domain-tld
+  #       hosts:
+  #         - organizr.domain.tld
+  
+  persistence:
+    # type: options are statefulset or deployment
+    type: statefulset
+    config:
+      enabled: true
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi

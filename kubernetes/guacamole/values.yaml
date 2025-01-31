@@ -1,0 +1,8 @@
+replicaCount: 1
+
+postgres:
+  hostname: "postgresql"
+  port: "5432"
+  database: "guacamole"
+  user: "guacamole"
+  password: "LkJaGMJLjn33gTet"

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: authentik-service
+  namespace: authentik  # Specify the namespace where Authentik is deployed
+spec:
+  selector:
+    app: authentik
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9000 # External port
+      targetPort: 9000 # Pod's port
+    - name: https
+      protocol: TCP
+      port: 9443 # External port
+      targetPort: 9443 # Pod's port
+  type: LoadBalancer

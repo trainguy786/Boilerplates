@@ -1,0 +1,142 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+  labels:
+    app: qbittorrent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+        component: prowlarr  # Add a specific label for Prowlarr
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: kube-prod-worker-1
+      containers:
+        # Gluetun VPN Container
+        - name: gluetun
+          image: qmcgaw/gluetun:latest
+          ports:
+            - containerPort: 8888  # HTTP Proxy (optional)
+            - containerPort: 8388  # Shadowsocks Proxy (optional)
+          env:
+            - name: VPNSP
+              value: "surfshark" # Replace with your VPN provider (e.g., nordvpn, pia, mullvad)
+            - name: OPENVPN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: vpn-credentials
+                  key: username
+            - name: OPENVPN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vpn-credentials
+                  key: password
+            - name: SERVER_COUNTRIES
+              value: "France"  # Replace with the desired server location(s)
+            - name: TZ
+              value: "UTC"  # Set your timezone
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+            privileged: true  # Required for VPN and /dev/net/tun
+          volumeMounts:
+            - name: config
+              mountPath: /gluetun  # Optional for persistent Gluetun configuration
+            - name: dev-net-tun
+              mountPath: /dev/net/tun
+        # qBittorrent Container
+        - name: qbittorrent
+          image: linuxserver/qbittorrent:latest
+          ports:
+            - containerPort: 8080  # Web UI
+            - containerPort: 8999  # Torrent traffic
+          env:
+            - name: PUID
+              value: "3000"  # Change to match your user ID
+            - name: PGID
+              value: "3002"  # Change to match your group ID
+            - name: TZ
+              value: "UTC"
+            - name: WEBUI_PORT
+              value: "8080"
+          volumeMounts:
+            - name: downloads
+              mountPath: /downloads
+            - name: config
+              mountPath: /config
+          securityContext:
+            runAsUser: 3000
+            runAsGroup: 3002
+        - name: prowlarr
+          image: linuxserver/prowlarr:latest
+          ports:
+            - containerPort: 9696  # Web UI
+          env:
+            - name: PUID
+              value: "3000"  # Change to match your user ID
+            - name: PGID
+              value: "3002"  # Change to match your group ID
+            - name: TZ
+              value: "UTC"
+          volumeMounts:
+            - name: prowlarr-config
+              mountPath: /config
+          securityContext:
+            runAsUser: 3000
+            runAsGroup: 3002
+      volumes:
+        - name: downloads
+          nfs:
+            server: 10.0.0.10
+            path: /mnt/NVME-for-now/Share/data/qbittorrent/downloads
+        - name: config
+          persistentVolumeClaim:
+            claimName: qbittorrent-config-pvc
+        - name: prowlarr-config
+          persistentVolumeClaim:
+            claimName: prowlarr-config-pvc
+        - name: dev-net-tun
+          hostPath:
+            path: /dev/net/tun
+            type: CharDevice
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: qbittorrent-config-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-csi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prowlarr-config-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-csi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vpn-credentials
+type: Opaque
+stringData:
+  username: LCr6HDzJATaV6TCdjxPHVEzT
+  password:  7xS22uVDEBLvKNH4Dvx86Mma

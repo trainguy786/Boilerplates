@@ -1,0 +1,63 @@
+persistence:
+  # -- Enable persistence
+  enabled: false
+  # -- Persistence type is pvc. When `false`, data volume definition is read from `persistence.dataVolume`
+  isPvc: false
+  # -- Name of the existing claim to be used
+  existingClaim: ""
+  # -- Storage class for the data volume
+  storageClass: ""
+  # -- Volume name override for the pvc
+  volumeName: ""
+  # -- Annotations for the claim
+  annotations: {}
+    # helm.sh/resource-policy: keep
+  # -- Access modes for the claim
+  accessModes:
+    - ReadWriteMany
+  # -- Size for the claim
+  size: 200Gi
+  # -- Alternative data volume definition (e.g. nfs, hostPath). Used when `persistence.isPvc` is `false`
+  dataVolume: 
+    name: downloads
+    nfs:
+      server: 10.0.0.10   # Replace with your NFS server address
+      path: /mnt/NVME-for-now/Share/data/qbittorrent/downloads 
+
+# -- Non-sensitive environment variables to be set in the pods. See the [application docs](https://haugene.github.io/docker-transmission-openvpn/config-options/)
+env: 
+  OPENVPN_PROVIDER: "surfshark"
+  CREATE_TUN_DEVICE: "true"
+  TRANSMISSION_SPEED_LIMIT_UP: "2048"
+  PUID: "3000"
+  PGID: "3002"
+
+
+# -- Sensitive environment variables to be set in the pods. See the [application docs](https://haugene.github.io/docker-transmission-openvpn/config-options/)
+secretEnv: 
+  OPENVPN_USERNAME: LCr6HDzJATaV6TCdjxPHVEzT
+  OPENVPN_PASSWORD: 7xS22uVDEBLvKNH4Dvx86Mma
+
+# -- Mount the /dev/net/tun device into the pod. Required by OpenVPN when a `tun` device is used
+mountTunDevice: true
+
+
+# -- Arbitrary extra volume definitions for the pod
+extraVolumes: 
+  - name: custom-provider-config
+    secret:
+      defaultMode: 420
+      secretName: openvpn-custom
+
+# -- Arbitrary extra volume mounts for the pod
+extraVolumeMounts: 
+  - mountPath: /etc/openvpn/custom/
+    name: custom-provider-config
+
+# -- Pod liveness probe
+livenessProbe: {}
+
+# -- Pod readiness probe
+readinessProbe:
+  tcpSocket:
+    port: http

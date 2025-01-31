@@ -1,0 +1,76 @@
+# Default values for portainer.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+# If enterpriseEdition is enabled, then use the values below _instead_ of those in .image
+# enterpriseEdition: 
+#   enabled: false
+#   image:
+#     repository: portainer/portainer-ee
+#     tag: 2.17.0
+#     pullPolicy: Always
+
+helm upgrade --install --create-namespace -n portainer portainer portainer/portainer \
+    --set service.type=LoadBalancer \
+    --set nodeSelector.kubernetes\.io/hostname=kube-prod-master-1
+    --set image.tag=2.21.0
+
+
+# curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.28.13+k3s1 K3S_URL=https://10.0.10.11:6443 K3S_TOKEN=K10054e5b7cbcaa40eef923b0f3e9249895792be4c126687b455235818259e5e00b::server:2faa9cbfea7f2de64d3d8e64cf3e9a94 sh -
+image:
+  repository: portainer/portainer-ce
+  tag: 2.18.0
+  pullPolicy: Always
+
+imagePullSecrets: []
+
+nodeSelector: 
+  kubernetes.io/hostname: kube-prod-master-1
+
+serviceAccount:
+  annotations: {}
+  name: portainer-sa-clusteradmin
+
+service:
+  # Set the httpNodePort and edgeNodePort only if the type is NodePort
+  # For Ingress, set the type to be ClusterIP and set ingress.enabled to true
+  # For Cloud Providers, set the type to be LoadBalancer
+  type: LoadBalancer
+  httpPort: 9000
+  httpsPort: 9443
+  httpNodePort: 30777
+  httpsNodePort: 30779
+  edgePort: 8000
+  edgeNodePort: 30776
+  annotations: {}
+
+tls:
+  # If set, Portainer will be configured to use TLS only
+  force: false
+  # If set, will mount the existing secret into the pod
+  existingSecret: ""
+
+feature:
+  flags: ""
+
+ingress:
+  enabled: true
+  ingressClassName: ""
+  annotations:
+  # Note: Hosts and paths are of type array
+  hosts:
+    - host: <hostname>
+      paths:
+      - path: "/"
+  tls: []
+
+resources: {}
+
+persistence:
+  enabled: true
+  size: "2Gi"
+  annotations: {}
+  storageClass:
+  existingClaim:

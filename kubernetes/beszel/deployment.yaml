@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beszel-deployment
+  labels:
+    app: beszel
+spec:
+  replicas: 2  # Number of pods
+  selector:
+    matchLabels:
+      app: beszel
+  template:
+    metadata:
+      labels:
+        app: beszel
+    spec:
+      containers:
+      - name: beszel
+        image: henrygd/beszel  # Replace with your actual image (e.g., DockerHub or private registry)
+        ports:
+        - containerPort: 8080  # Port on which Beszel runs inside the container
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1"
+            memory: "1Gi"

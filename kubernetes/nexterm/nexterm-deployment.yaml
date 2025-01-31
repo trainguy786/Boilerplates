@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.35.0 (9532ceef3)
+  labels:
+    io.kompose.service: nexterm
+  name: nexterm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: nexterm
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.35.0 (9532ceef3)
+      labels:
+        io.kompose.service: nexterm
+    spec:
+      containers:
+        - image: germannewsmaker/nexterm:1.0.1-OPEN-PREVIEW
+          name: nexterm
+          ports:
+            - containerPort: 6989
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /app/data
+              name: nexterm
+      restartPolicy: Always
+      volumes:
+        - name: nexterm
+          persistentVolumeClaim:
+            claimName: nexterm
