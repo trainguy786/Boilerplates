@@ -8,13 +8,13 @@ database:
   usernameFromSecret: true
 
   # -- Username for database
-  username: zaid
+  username: <username>
 
   # # -- Key used within secret for username
   # usernameKey: username
 
   # -- Password for database
-  password: tSue$4voi
+  password: <password>
 
   # # -- Key used within secret for password
   # passwordKey: password

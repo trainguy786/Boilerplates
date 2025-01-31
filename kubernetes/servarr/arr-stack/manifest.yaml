@@ -44,7 +44,7 @@ spec:
         - name: media
           nfs:
             server: 10.0.0.10
-            path: /mnt/NVME-for-now/Share/data
+            path: <path>
         - name: config
           persistentVolumeClaim:
             claimName: sonarr-config-pvc
@@ -117,7 +117,7 @@ spec:
         - name: media
           nfs:
             server: 10.0.0.10
-            path: /mnt/NVME-for-now/Share/data
+            path: <path>
         - name: config
           persistentVolumeClaim:
             claimName: radarr-config-pvc
@@ -219,25 +219,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fanresolvarr
+  name: flaresolverr
   namespace: arr-stack
   labels:
-    app: fanresolvarr
+    app: flaresolverr
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: fanresolvarr
+      app: flaresolvarr
   template:
     metadata:
       labels:
-        app: fanresolvarr
+        app: flaresolverr
     spec:
       containers:
-        - name: fanresolvarr
-          image: ghcr.io/flaresolverr/flaresolverr:latest  # Replace with the actual Fanresolvarr image
+        - name: flaresolverr
+          image: ghcr.io/flaresolverr/flaresolverr:latest  # Replace with the actual flaresolverr image
           ports:
-            - containerPort: 8191  # Replace with Fanresolvarr's port
+            - containerPort: 8191  # Replace with flaresolverr's port
           env:
             - name: PUID
               value: "1000"
@@ -251,12 +251,12 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: fanresolvarr-config-pvc
+            claimName: flaresolverr-config-pvc
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: fanresolvarr-config-pvc
+  name: flaresolverr-config-pvc
   namespace: arr-stack
 spec:
   accessModes:
@@ -268,16 +268,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: fanresolvarr
+  name: flaresolverr
   namespace: arr-stack
   labels:
-    app: fanresolvarr
+    app: flaresolverr
 spec:
   type: ClusterIP
   selector:
-    app: fanresolvarr
+    app: flaresolverr
   ports:
-    - port: 8081  # Replace with Fanresolvarr's port
+    - port: 8081  # Replace with flaresolverr's port
       targetPort: 8081
 ---
 apiVersion: apps/v1

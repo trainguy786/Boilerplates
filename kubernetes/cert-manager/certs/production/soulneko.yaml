@@ -2,14 +2,14 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: kube-soulneko-xyz
+  name: kube-domain-xyz
   namespace: default
 spec:
-  secretName: kube-soulneko-xyz-tls
+  secretName: kube-domain-xyz-tls
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "*.kube.soulneko.xyz"
+  commonName: "*.kube.domain.local"
   dnsNames:
-  - "kube.soulneko.xyz"
-  - "*.kube.soulneko.xyz"
+  - "kube.domain.local"
+  - "*.kube.domain.local"
