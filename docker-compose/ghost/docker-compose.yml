@@ -1,0 +1,23 @@
+
+services:
+
+  ghost:
+    image: ghost:5-alpine
+    restart: always
+    ports:
+      - 8078:2368
+    env_file: ".env"
+    environment:
+      # see https://ghost.org/docs/config/#configuration-options
+      database__client: ${database__client}
+      database__connection__host: ${database__connection__host}
+      database__connection__user: ${database__connection__user}
+      database__connection__password: ${database__connection__password}
+      database__connection__database: ${database__connection__database}
+      # this url value is just an example, and is likely wrong for your environment!
+      url: https://blog.domain.local
+      # contrary to the default mentioned in the linked documentation, this image defaults to NODE_ENV=production (so development mode needs to be explicitly specified if desired)
+      #NODE_ENV: development
+    volumes:
+      - ./ghost_data2:/var/lib/ghost/content
+

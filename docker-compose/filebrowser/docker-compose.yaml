@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  filebrowser:
+    image: hurlenko/filebrowser
+    user: "${UID}:${GID}"
+    ports:
+      - 8084:8080
+    volumes:
+      - /media/NAS:/data
+      - ./config:/config
+    environment:
+      - FB_BASEURL=/filebrowser
+    restart: always

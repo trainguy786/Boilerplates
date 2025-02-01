@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         app: qbittorrent
-        component: prowlarr  # Add a specific label for Prowlarr
+        # component: prowlarr  # Add a specific label for Prowlarr
     spec:
       nodeSelector:
         kubernetes.io/hostname: kube-prod-worker-1
@@ -74,23 +74,23 @@ spec:
           securityContext:
             runAsUser: 3000
             runAsGroup: 3002
-        - name: prowlarr
-          image: linuxserver/prowlarr:latest
-          ports:
-            - containerPort: 9696  # Web UI
-          env:
-            - name: PUID
-              value: "3000"  # Change to match your user ID
-            - name: PGID
-              value: "3002"  # Change to match your group ID
-            - name: TZ
-              value: "UTC"
-          volumeMounts:
-            - name: prowlarr-config
-              mountPath: /config
-          securityContext:
-            runAsUser: 3000
-            runAsGroup: 3002
+        # - name: prowlarr
+        #   image: linuxserver/prowlarr:latest
+        #   ports:
+        #     - containerPort: 9696  # Web UI
+        #   env:
+        #     - name: PUID
+        #       value: "3000"  # Change to match your user ID
+        #     - name: PGID
+        #       value: "3002"  # Change to match your group ID
+        #     - name: TZ
+        #       value: "UTC"
+        #   volumeMounts:
+        #     - name: prowlarr-config
+        #       mountPath: /config
+        #   securityContext:
+        #     runAsUser: 3000
+        #     runAsGroup: 3002
       volumes:
         - name: downloads
           nfs:
@@ -99,9 +99,9 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: qbittorrent-config-pvc
-        - name: prowlarr-config
-          persistentVolumeClaim:
-            claimName: prowlarr-config-pvc
+        # - name: prowlarr-config
+        #   persistentVolumeClaim:
+        #     claimName: prowlarr-config-pvc
         - name: dev-net-tun
           hostPath:
             path: /dev/net/tun
@@ -119,18 +119,18 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: nfs-csi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: prowlarr-config-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: nfs-csi
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: prowlarr-config-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+#   storageClassName: nfs-csi
 ---
 apiVersion: v1
 kind: Secret
