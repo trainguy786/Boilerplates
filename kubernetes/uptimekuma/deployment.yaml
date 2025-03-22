@@ -1,0 +1,26 @@
+replicaCount: 2
+
+image:
+  repository: louislam/uptime-kuma
+  pullPolicy: IfNotPresent
+podSecurityContext: 
+  fsiGroup: 0
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  # readOnlyRootFilesystem: true
+  runAsNonRoot: false
+  runAsUser: 0
+
+persistence:
+  enabled: true
+  existingClaim: ""
+  path: /app/data
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 5Gi
+service:
+  type: LoadBalancer
+  port: 80
