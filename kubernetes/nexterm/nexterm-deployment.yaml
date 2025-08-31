@@ -2,11 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert -f docker-compose.yml
-    kompose.version: 1.35.0 (9532ceef3)
+    kompose.cmd: kompose --file docker-compose.yaml convert
+    kompose.version: 1.37.0 (HEAD)
   labels:
     io.kompose.service: nexterm
   name: nexterm
+  namespace: nexterm
 spec:
   replicas: 1
   selector:
@@ -17,13 +18,16 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml
-        kompose.version: 1.35.0 (9532ceef3)
+        kompose.cmd: kompose --file docker-compose.yaml convert
+        kompose.version: 1.37.0 (HEAD)
       labels:
         io.kompose.service: nexterm
     spec:
       containers:
-        - image: germannewsmaker/nexterm:1.0.1-OPEN-PREVIEW
+        - env:
+            - name: ENCRYPTION_KEY
+              value: 06f8cd5076f7cb0e2657683e4d793d12fbf7cdf0e3477b7b844af1311c67b655
+          image: germannewsmaker/nexterm:1.0.5-OPEN-PREVIEW
           name: nexterm
           ports:
             - containerPort: 6989
