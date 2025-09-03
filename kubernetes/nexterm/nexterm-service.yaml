@@ -5,13 +5,16 @@ metadata:
     kompose.cmd: kompose --file docker-compose.yaml convert
     kompose.version: 1.37.0 (HEAD)
   labels:
-    io.kompose.service: nexterm
-  name: nexterm
+    io.kompose.service: external
+  name: nexterm-service
   namespace: nexterm
 spec:
   ports:
     - name: "6989"
       port: 6989
       targetPort: 6989
+      protocol: TCP
   selector:
     io.kompose.service: nexterm
+    app: nexterm
+  type: LoadBalancer
