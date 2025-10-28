@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: termix-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi # adjust size as needed
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: termix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: termix
+  template:
+    metadata:
+      labels:
+        app: termix
+    spec:
+      initContainers:
+        - name: fix-perms
+          image: busybox
+          command: ["sh", "-c", "chown -R 1000:1000 /app/data"]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: termix-storage
+              mountPath: /app/data
+      containers:
+        - name: termix
+          image: ghcr.io/lukegus/termix:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+          volumeMounts:
+            - name: termix-storage
+              mountPath: /app/data
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+      volumes:
+        - name: termix-storage
+          persistentVolumeClaim:
+            claimName: termix-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: termix
+spec:
+  selector:
+    app: termix
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+

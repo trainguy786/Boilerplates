@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mazanoke-deployment
+  labels:
+    app: mazanoke
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mazanoke
+  template:
+    metadata:
+      labels:
+        app: mazanoke
+    spec:
+      containers:
+        - name: mazanoke
+          image: ghcr.io/civilblur/mazanoke:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mazanoke-service
+  labels:
+    app: mazanoke
+spec:
+  type: LoadBalancer
+  selector:
+    app: mazanoke
+  ports:
+    - protocol: TCP
+      port: 3474
+      targetPort: 80

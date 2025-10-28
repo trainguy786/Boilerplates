@@ -10,12 +10,37 @@ metadata:
   namespace: kwatch
 data:
   config.yaml: |
-    maxRecentLogLines: 20
-    ignoreFailedGracefulShutdown: true
+    maxRecentLogLines: 40
+    ignoreFailedGracefulShutdown: false
     alert:
-      slack:
-        webhook: <webhook>
+      #slack:
+        #webhook: <webhook_url>
+      #pagerduty:
+        #integrationKey: <integration_key>
+      discord:
+        webhook: https://discordapp.com/api/webhooks/1422665390412005480/i8EzYhXU_9XtKbJnzFlJJqV6m_ugvhswUy4SOaQ0SIQIn0M650W2x_iT7ocZBSGMjLDR 
+        title: Oh no! a crash happened! 
+      #telegram:
+          #token: <token_key>
+          #chatId: <chat_id>
+      #email:
+        #form: <from_mail>
+        #to: <to_mail>
+        #password: <password>
+        #host: <host>
+        #port: <port_number>
+      #teams:
+          #webhook: <webhook_url>
+      #rocketchat:
+          #webhook: <webhook_url>
+      #mattermost:
+          #webhook: <webhook_url>
+      #opsgenie:
+        #apiKey: <api_key>
     #namespaces:
-    #  - <optional_namespace>
-    nodeMonitor:
-        enabled: true
+      #- <optional_namespace>
+    #reasons:
+      #- <optional_reason>
+    #ignoreContainerNames:
+      #- <optional_container_name>
+
